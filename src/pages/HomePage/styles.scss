@@ -1,0 +1,49 @@
+.home {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #000;
+}
+
+.data-container {
+  color: #000;
+}
+
+.image-container {
+  width: 40%;
+  height: 100%;
+  display: inline-block;
+  position: relative;
+
+  .country-state-text {
+    position: absolute;
+    top: 15px;
+    right: 110px;
+    text-align: center;
+    font-size: 40px;
+    width: 300px;
+    border-radius: 8px;
+    color: #FFF;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  .temperature-text {
+    word-break: break-all;
+    position: absolute;
+    bottom: 25px;
+    right: 180px;
+    text-align: center;
+    font-size: 40px;
+    color: #FFF;
+    width: 150px;
+    border-radius: 8px;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
