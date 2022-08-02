@@ -15,7 +15,12 @@ export function Footer() {
               variant="h6"
               component="h1"
               align="left"
-              sx={{ flexGrow: 1, fontWeight: 800, fontSize: 16 }}
+              sx={{
+                flexGrow: 1,
+                fontWeight: 800,
+                fontSize: 16,
+                fontFamily: 'PT Sans',
+              }}
             >
               vitorpessoti59@gmail.com
             </Typography>
@@ -23,7 +28,12 @@ export function Footer() {
               variant="h6"
               component="h1"
               align="center"
-              sx={{ flexGrow: 1, fontWeight: 800, fontSize: 16 }}
+              sx={{
+                flexGrow: 1,
+                fontWeight: 800,
+                fontSize: 16,
+                fontFamily: 'PT Sans',
+              }}
             >
               wilsonpinheirodev@gmail.com
             </Typography>
@@ -33,7 +43,12 @@ export function Footer() {
               variant="h6"
               component="h1"
               align="right"
-              sx={{ flexGrow: 1, fontWeight: 800, fontSize: 16 }}
+              sx={{
+                flexGrow: 1,
+                fontWeight: 800,
+                fontSize: 16,
+                fontFamily: 'PT Sans',
+              }}
             >
               Data from openweathermap.org
             </Typography>
@@ -42,7 +57,12 @@ export function Footer() {
             <Typography
               variant="h6"
               component="h1"
-              sx={{ flexGrow: 1, fontWeight: 800, fontSize: 16 }}
+              sx={{
+                flexGrow: 1,
+                fontWeight: 800,
+                fontSize: 16,
+                fontFamily: 'PT Sans',
+              }}
             >
               Copyright © 2022
             </Typography>

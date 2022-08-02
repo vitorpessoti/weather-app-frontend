@@ -8,7 +8,51 @@
 }
 
 .data-container {
+  display: flex;
+  width: 60%;
+  padding: 0 2rem;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
   color: #000;
+}
+
+.infos-data {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2rem 0;
+
+  .sunrise-sunset-text {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 1rem 0;
+
+    span {
+      font-weight: 800;
+      font-size: 25px;
+    }
+  }
+
+  .min-max-text {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 0 2.5rem;
+
+    span {
+      font-weight: 800;
+      font-size: 25px;
+    }
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+
+    &>button {
+      margin-bottom: 1rem;
+    }
+  }
 }
 
 .image-container {
@@ -26,7 +70,7 @@
     width: 300px;
     border-radius: 8px;
     color: #FFF;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .temperature-text {
@@ -39,11 +83,46 @@
     color: #FFF;
     width: 150px;
     border-radius: 8px;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   img {
     width: 100%;
     height: 100%;
   }
+}
+
+// .cards-container {
+//   display: flex;
+//   flex-direction: row;
+//   width: 100%;
+//   flex-wrap: wrap;
+
+//   .columns {
+//     display: flex;
+//     flex-direction: row;
+//     flex-wrap: nowrap;
+//     width: 100%;
+
+//     .column {
+//       display: flex;
+//       justify-content: space-between;
+//       width: 100%;
+//     }
+
+//     &>.column {
+//       padding: 0.5rem 0rem;
+//     }
+
+//   }
+// }
+
+.cards-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 100px 100px;
+  column-gap: 5.4rem;
+  row-gap: 15px;
+  justify-items: center;
+  align-items: center;
 }

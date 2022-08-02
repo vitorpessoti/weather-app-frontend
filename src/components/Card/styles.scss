@@ -1,0 +1,22 @@
+.info-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background-color: #03a9f4 !important;
+
+  span {
+    font-size: 14px;
+    color: #FFFF;
+  }
+}
+
+.info-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
