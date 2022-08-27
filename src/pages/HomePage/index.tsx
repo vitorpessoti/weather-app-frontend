@@ -14,21 +14,37 @@ import GeocodingService from '../../services/geocoding/search.service';
 import './styles.scss';
 
 export function HomePage() {
-  const [data, setData] = useState([]);
+  const [locationData, setLocationData] = useState([]);
 
   useEffect(() => {
     populateData();
   });
 
   async function populateData() {
-    const data = {
-      latitude: -12.974722,
-      longitude: -38.476665,
-    };
+    if (!isGeolocationSupported()) {
+      console.log('Geolocation is not supported by your browser');
+    } else {
+      await getLocation();
+    }
+  }
 
-    const response = await GeocodingService.getByLatitudeLongitude(data);
+  function isGeolocationSupported() {
+    return navigator.geolocation;
+  }
 
-    console.log(response);
+  async function getLocation() {
+    console.log('Locating...');
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const data = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
+      const response = await GeocodingService.getByLatitudeLongitude(data);
+      console.log('response', response);
+
+    }, () => {
+      console.log('Unable to retrieve your location');
+    });
   }
 
   return (
