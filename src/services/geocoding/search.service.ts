@@ -15,6 +15,9 @@ class GeocodingService {
       return await api.post('/geocoding/latLong', data);
     } catch (error) {
       console.log(error);
+      return {
+        data: error
+      };
     }
   }
 
@@ -23,6 +26,9 @@ class GeocodingService {
       return await api.post('/onecall', data);
     } catch (error) {
       console.log(error);
+      return {
+        data: error
+      }
     }
   }
 }

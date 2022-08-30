@@ -11,14 +11,27 @@ import Humidity from '../../assets/in_app_icons/humidity.png';
 import { Info } from '../../components/Card';
 import Button from '@mui/material/Button';
 import GeocodingService from '../../services/geocoding/search.service';
+import Dates from '../../services/utils/dates';
 import './styles.scss';
+import ReactLoading from 'react-loading';
+
+type Location = {
+  [key: string]: any;
+}
+type Weather = {
+  [key: string]: any;
+}
 
 export function HomePage() {
-  const [locationData, setLocationData] = useState([]);
+  const [location, setLocation] = useState({} as Location);
+  const [weather, setWeather] = useState({} as Weather);
+  const [sunrise, setSunrise] = useState(new Date());
+  const [sunset, setSunset] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     populateData();
-  });
+  }, []);
 
   async function populateData() {
     if (!isGeolocationSupported()) {
@@ -35,91 +48,114 @@ export function HomePage() {
   async function getLocation() {
     console.log('Locating...');
     navigator.geolocation.getCurrentPosition(async (position) => {
-      const data = {
+      const locationData = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       };
-      const response = await GeocodingService.getByLatitudeLongitude(data);
-      console.log('response', response);
+      const weatherData = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        units: 'metric'
+      };
 
+      const locationResponse = await GeocodingService.getByLatitudeLongitude(locationData);
+      const weatherResponse = await GeocodingService.getForecast(weatherData);
+
+      setLocation(locationResponse.data.item.data[0]);
+      setWeather(weatherResponse.data.item);
+      setCurrentTime(Dates.timestampToDate(weatherResponse.data.item.current.dt));
+      setSunrise(Dates.timestampToDate(weatherResponse.data.item.current.sunrise));
+      setSunset(Dates.timestampToDate(weatherResponse.data.item.current.sunset));
     }, () => {
       console.log('Unable to retrieve your location');
     });
   }
-
-  return (
-    <>
+  if (!location.city) {
+    return (
       <BaseLayout>
-        <div className="home">
-          <aside className="image-container">
-            <img src={Rain} alt="rain" />
-            <figcaption className="country-state-text">Tokyo, Japan</figcaption>
-            <figcaption className="temperature-text">
-              19°C <figcaption>Rain</figcaption>
-            </figcaption>
-          </aside>
-
-          <div className="data-container">
-            <div className="infos-data">
-              <div className="sunrise-sunset-text">
-                <span>Sunrise: 06:30</span>
-                <span>Sunset: 17:45</span>
-              </div>
-              <div className="min-max-text">
-                <span>Max: 23°</span>
-                <span>Min: 15°</span>
-              </div>
-              <div className="button-group">
-                <Button variant="contained" size="large">
-                  Hourly
-                </Button>
-                <Button variant="contained" size="large">
-                  Daily
-                </Button>
-              </div>
-            </div>
-            <div className="cards-container">
-              <Info image={Wind} alt="sol" title="Wind" subtitle="6.69 km/h" />
-              <Info
-                image={FeelsLike}
-                alt="sol"
-                title="Feels like"
-                subtitle="26°"
-              />
-              <Info
-                image={Pressure}
-                alt="sol"
-                title="Pressure"
-                subtitle="1018 hPa"
-              />
-              <Info
-                image={Precipitation}
-                alt="sol"
-                title="Precipitation"
-                subtitle="0.3 mm"
-              />
-              <Info
-                image={DewPoint}
-                alt="sol"
-                title="Dew point"
-                subtitle="21°"
-              />
-              <Info
-                image={Humidity}
-                alt="sol"
-                title="Humidity"
-                subtitle="76%"
-              />
-              <Info
-                image={UvIndex}
-                alt="sol"
-                title="UV index"
-                subtitle="6/10"
-              />
-            </div>
-          </div>
+        <div className="home d-flex-horizontally-centered">
+          <ReactLoading type='bubbles' color='#1976d2' height={'5%'} width={'5%'} />
         </div>
       </BaseLayout>
-    </>
-  );
+    )
+    } else {
+    return (
+      <>
+        <BaseLayout>
+          <div className="home">
+            <aside className="image-container">
+              <img src={Rain} alt="rain" />
+              <figcaption className="country-state-text">{location.city}, {location.regionCode}, {location.country}</figcaption>
+              <figcaption className="temperature-text">
+                {Math.round(weather.current.temp)}°C 
+                <figcaption>
+                  {weather.current.weather[0].main}
+                </figcaption>
+              </figcaption>
+            </aside>
+
+            <div className="data-container">
+              <div className="infos-data">
+                <div className="sunrise-sunset-text">
+                  <span>Sunrise: {Dates.formatDate(sunrise, 'HH:mm')}</span>
+                  <span>Sunset: {Dates.formatDate(sunset, 'HH:mm')}</span>
+                </div>
+                <div className="min-max-text">
+                  <span>Max: {Math.round(weather.daily[0].temp.max)}°</span>
+                  <span>Min: {Math.round(weather.daily[0].temp.min)}°</span>
+                </div>
+                <div className="button-group">
+                  <Button variant="contained" size="large">
+                    Hourly
+                  </Button>
+                  <Button variant="contained" size="large">
+                    Daily
+                  </Button>
+                </div>
+              </div>
+              <div className="cards-container">
+                <Info image={Wind} alt="sol" title="Wind" subtitle="6.69 km/h" />
+                <Info
+                  image={FeelsLike}
+                  alt="sol"
+                  title="Feels like"
+                  subtitle={Math.round(weather.current.feels_like) + 'º'}
+                />
+                <Info
+                  image={Pressure}
+                  alt="sol"
+                  title="Pressure"
+                  subtitle={weather.current.pressure + ' hPa'}
+                />
+                <Info
+                  image={Precipitation}
+                  alt="sol"
+                  title="% Precip."
+                  subtitle={(weather.daily[0].pop * 100) + '%'}
+                />
+                <Info
+                  image={DewPoint}
+                  alt="sol"
+                  title="Dew point"
+                  subtitle={Math.round(weather.current.dew_point) + ' º'}
+                />
+                <Info
+                  image={Humidity}
+                  alt="sol"
+                  title="Humidity"
+                  subtitle={weather.current.humidity + '%'}
+                />
+                <Info
+                  image={UvIndex}
+                  alt="sol"
+                  title="UV index"
+                  subtitle={Math.round(weather.current.uvi) + '/10'}
+                />
+              </div>
+            </div>
+          </div>
+        </BaseLayout>
+      </>
+    );
+  }
 }

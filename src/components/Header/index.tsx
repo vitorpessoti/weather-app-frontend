@@ -10,6 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Logo from '../../assets/logo.svg';
 import './styles.scss';
+import Dates from '../../services/utils/dates';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -83,7 +84,7 @@ export function Header() {
               fontFamily: 'PT Sans'
             }}
           >
-            Tuesday, Jul 26 - 23:00
+            {Dates.getCurrentDate()}
           </Typography>
           <Search>
             <SearchIconWrapper>
