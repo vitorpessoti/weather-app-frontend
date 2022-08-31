@@ -1,30 +1,24 @@
-import { useEffect, useState } from 'react';
-import { BaseLayout } from '../../layouts/BaseLayout';
-import Rain from '../../assets/images/10n.jpg';
-import UvIndex from '../../assets/in_app_icons/sun.png';
-import Wind from '../../assets/in_app_icons/wind.png';
-import FeelsLike from '../../assets/in_app_icons/feels-like.png';
-import Pressure from '../../assets/in_app_icons/pressure.png';
-import Precipitation from '../../assets/in_app_icons/precipitation.png';
-import DewPoint from '../../assets/in_app_icons/dew-point.png';
-import Humidity from '../../assets/in_app_icons/humidity.png';
-import { Info } from '../../components/Card';
-import { DailyForecast } from '../../components/Card/daily-forecast';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { List, ListItem } from '@mui/material';
-import GeocodingService from '../../services/geocoding/search.service';
-import Dates from '../../services/utils/dates';
-import './styles.scss';
-import ReactLoading from 'react-loading';
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ImageListItemBar from "@mui/material/ImageListItemBar";
+import Grid from '@mui/material/Grid';
+import { useEffect, useState } from 'react';
+import ReactLoading from 'react-loading';
+import Rain from '../../assets/images/10n.jpg';
+import DewPoint from '../../assets/in_app_icons/dew-point.png';
+import FeelsLike from '../../assets/in_app_icons/feels-like.png';
+import Humidity from '../../assets/in_app_icons/humidity.png';
+import Precipitation from '../../assets/in_app_icons/precipitation.png';
+import Pressure from '../../assets/in_app_icons/pressure.png';
+import UvIndex from '../../assets/in_app_icons/sun.png';
+import Wind from '../../assets/in_app_icons/wind.png';
+import { Info } from '../../components/Card';
+import { DailyForecast } from '../../components/Card/daily-forecast';
+import { BaseLayout } from '../../layouts/BaseLayout';
+import GeocodingService from '../../services/geocoding/search.service';
+import Dates from '../../services/utils/dates';
+import './styles.scss';
 
 type Location = {
   [key: string]: any;
@@ -127,24 +121,22 @@ export function HomePage() {
       setSunrise(Dates.timestampToDate(weatherResponse.data.item.current.sunrise));
       setSunset(Dates.timestampToDate(weatherResponse.data.item.current.sunset));
 
-      // for (let i = 0; i < weatherResponse.data.item.daily.length; i++) {
-      //   const day = weatherResponse.data.item.daily[i];
-      //   const dayDate = Dates.timestampToDate(day.dt);
-      //   const formattedDate = Dates.formatDate(dayDate, 'MMM DD');
-      //   const tempMax = Math.round(day.temp.max);
-      //   const tempMin = Math.round(day.temp.min);
-      //   const image = `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
-      //   setDailyRows(oldArray => [...oldArray,
-      //     <ListItem>
-      //       <DailyForecast
-      //         image={image}
-      //         alt={day.weather.description}
-      //         title={formattedDate}
-      //         subtitle={`${tempMax}º - ${tempMin}º`}
-      //       />
-      //     </ListItem>
-      //   ]);
-      // }
+      for (let i = 0; i < weatherResponse.data.item.daily.length; i++) {
+        const day = weatherResponse.data.item.daily[i];
+        const dayDate = Dates.timestampToDate(day.dt);
+        const formattedDate = Dates.formatDate(dayDate, 'MMM DD');
+        const tempMax = Math.round(day.temp.max);
+        const tempMin = Math.round(day.temp.min);
+        const image = `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
+        setDailyRows(oldArray => [...oldArray,
+        <DailyForecast
+          image={image}
+          alt={day.weather.description}
+          title={formattedDate}
+          subtitle={`${tempMax}º - ${tempMin}º`}
+        />
+        ]);
+      }
     }, () => {
       console.log('Unable to retrieve your location');
     });
@@ -162,7 +154,7 @@ export function HomePage() {
     return (
       <>
         <BaseLayout>
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
             <Grid container spacing={6}>
               <Grid item xs={5}>
                 <Card className="image-container" style={styles.mainCard} sx={{ minHeight: 200 }}>
@@ -194,7 +186,12 @@ export function HomePage() {
                 </div>
 
                 <div className="cards-container">
-                  <Info image={Wind} alt="sol" title="Wind" subtitle="6.69 km/h" />
+                  <Info 
+                    image={Wind}
+                    alt="sol"
+                    title="Wind"
+                    subtitle={weather.current.wind_speed + ' m/s'}
+                    />
                   <Info
                     image={FeelsLike}
                     alt="sol"
@@ -239,34 +236,20 @@ export function HomePage() {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={12}>
               <Grid item xs={12}>
-                <ImageList sx={styles.imageList}>
-                  {images.map((image) => (
-                    <ImageListItem sx={styles.image}>
-                      <img src={image.thumbnail.uri} />
-                      <ImageListItemBar title={image.thumbnail.name} />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
+                <h3>8-day</h3>
               </Grid>
             </Grid>
           </Box>
-          <div className="data-container">
 
-          </div>
-          {/* </div> */}
-
-          {/* <Modal
-            open={dailyModalOpen}
-            onClose={handleCloseDailyModal}
-            aria-labelledby="parent-modal-title"
-            aria-describedby="parent-modal-description"
-          >
-            <Box sx={{ ...style }}>
-              <List sx={flexContainer}>
-                {dailyRows}
-              </List>
-            </Box>
-          </Modal> */}
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={12}>
+              <Grid item xs={12}>
+                <div className="scrolling-wrapper">
+                  {dailyRows}
+                </div>
+              </Grid>
+            </Grid>
+          </Box>
         </BaseLayout>
       </>
     );
