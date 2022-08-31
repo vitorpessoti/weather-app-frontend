@@ -1,5 +1,4 @@
 .base-layout {
-  width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: space-between;
@@ -7,6 +6,6 @@
 }
 
 .content {
-  width: 100vw;
   height: 100vh;
+  padding: 1em 0;
 }

@@ -1,5 +1,6 @@
 import { Footer } from '../../components/Footer';
 import { Header } from '../../components/Header';
+import Container from '@mui/material/Container';
 import './styles.scss';
 
 type Props = {
@@ -12,7 +13,9 @@ export function BaseLayout(props: Props) {
       <div className="header">
         <Header />
       </div>
-      <main className="content">{props.children}</main>
+      <Container maxWidth="lg">
+        <main className="content">{props.children}</main>
+      </Container>
       <div className="footer">
         <Footer />
       </div>

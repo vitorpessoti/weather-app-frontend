@@ -1,24 +1,22 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import './styles.scss';
 
 type Props = {
   image: string;
-  alt: string;
+  alt: any;
   title: string;
   subtitle: string;
 };
 
-export function Info(props: Props) {
+export function DailyForecast(props: Props) {
   return (
-    <Card className="info-card" variant="outlined">
+    <Card className="info-card">
       <CardContent className="info-card-content">
-        {props.title}
+        <span>{props.title}</span>
+        <img src={props.image} alt={props.alt} width="50" />
+        <span>{props.subtitle}</span>
       </CardContent>
-      <CardActions className="info-card-actions">
-        {props.subtitle}
-      </CardActions>
     </Card>
   );
 }
