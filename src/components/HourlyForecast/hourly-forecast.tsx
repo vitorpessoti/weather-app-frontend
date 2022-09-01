@@ -10,7 +10,7 @@ type Props = {
 
 export function HourlyForecast(props: Props) {
   return (
-    <Paper variant="outlined" className="wrapped-card info-card-content">
+    <Paper variant="outlined" className="wrapped-card-hourly info-card-content">
       <span>{props.title}</span>
       <img src={props.image} alt={props.alt} width="50"/>
       <span>{props.subtitle}</span>
