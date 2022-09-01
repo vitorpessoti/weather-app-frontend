@@ -1,0 +1,33 @@
+.info-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-variant-caps: petite-caps;
+}
+
+.info-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-align: center;
+  -webkit-overflow-scrolling: touch;
+
+  .wrapped-card {
+    display: inline-grid;
+    padding: 2em;
+    margin-right: .2em;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -14,7 +14,8 @@ import Pressure from '../../assets/in_app_icons/pressure.png';
 import UvIndex from '../../assets/in_app_icons/sun.png';
 import Wind from '../../assets/in_app_icons/wind.png';
 import { Info } from '../../components/Card';
-import { DailyForecast } from '../../components/Card/daily-forecast';
+import { DailyForecast } from '../../components/DailyForecast/daily-forecast';
+import { HourlyForecast } from '../../components/HourlyForecast/hourly-forecast';
 import { BaseLayout } from '../../layouts/BaseLayout';
 import GeocodingService from '../../services/geocoding/search.service';
 import Dates from '../../services/utils/dates';
@@ -32,37 +33,14 @@ export function HomePage() {
   const [weather, setWeather] = useState({} as Weather);
   const [sunrise, setSunrise] = useState(new Date());
   const [sunset, setSunset] = useState(new Date());
-  const [dailyModalOpen, setDailyModalOpen] = useState(false);
-  const [hourlyModalOpen, setHourlyModalOpen] = useState(false);
   const [dailyRows, setDailyRows] = useState([]);
+  const [hourlyRows, setHourlyRows] = useState([]);
 
   useEffect(() => {
     populateData();
   }, []);
 
-  const handleOpenDailyModal = () => setDailyModalOpen(true);
-  const handleCloseDailyModal = () => setDailyModalOpen(false);
-  const handleOpenHourlyModal = () => setHourlyModalOpen(true);
-  const handleCloseHourlyModal = () => setHourlyModalOpen(false);
   const isGeolocationSupported = () => navigator.geolocation;
-  const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '50%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-  };
-  const flexContainer = {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 0,
-  };
   const styles = {
     mainCard: {
       backgroundImage: `url(${Rain})`
@@ -74,23 +52,6 @@ export function HomePage() {
       maxWidth: 200
     }
   }
-  const images = [
-    {
-      thumbnail: {
-        uri: "https://lorempixel.com/200/200/animals",
-        name: "animals"
-      }
-    },
-    { thumbnail: { uri: "https://lorempixel.com/200/200/city", name: "city" } },
-    { thumbnail: { uri: "https://lorempixel.com/200/200/city", name: "city" } },
-    { thumbnail: { uri: "https://lorempixel.com/200/200/city", name: "city" } },
-    {
-      thumbnail: { uri: "https://lorempixel.com/200/200/nature", name: "nature" }
-    },
-    { thumbnail: { uri: "https://lorempixel.com/200/200/cats", name: "cats" } },
-    { thumbnail: { uri: "https://lorempixel.com/200/200/cats", name: "cats" } },
-    { thumbnail: { uri: "https://lorempixel.com/200/200/cats", name: "cats" } }
-  ];
 
   async function populateData() {
     if (!isGeolocationSupported()) {
@@ -137,6 +98,22 @@ export function HomePage() {
         />
         ]);
       }
+
+      for (let i = 0; i < weatherResponse.data.item.hourly.length; i++) {
+        const hour = weatherResponse.data.item.hourly[i];
+        const hourDate = Dates.timestampToDate(hour.dt);
+        const formattedDate = Dates.formatDate(hourDate, 'h a');
+        const temp = Math.round(hour.temp);
+        const image = `http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`;
+        setHourlyRows(oldArray => [...oldArray,
+        <HourlyForecast
+          image={image}
+          alt={hour.weather.description}
+          title={formattedDate}
+          subtitle={`${temp}º`}
+        />
+        ]);
+      }
     }, () => {
       console.log('Unable to retrieve your location');
     });
@@ -154,7 +131,7 @@ export function HomePage() {
     return (
       <>
         <BaseLayout>
-          <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
+        <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
             <Grid container spacing={6}>
               <Grid item xs={5}>
                 <Card className="image-container" style={styles.mainCard} sx={{ minHeight: 200 }}>
@@ -236,7 +213,25 @@ export function HomePage() {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={12}>
               <Grid item xs={12}>
-                <h3>8-day</h3>
+                <h3>8-day forecast</h3>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
+            <Grid container spacing={12}>
+              <Grid item xs={12}>
+                <div className="scrolling-wrapper">
+                  {dailyRows}
+                </div>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={12}>
+              <Grid item xs={12}>
+                <h3>Hourly forecast</h3>
               </Grid>
             </Grid>
           </Box>
@@ -245,7 +240,7 @@ export function HomePage() {
             <Grid container spacing={12}>
               <Grid item xs={12}>
                 <div className="scrolling-wrapper">
-                  {dailyRows}
+                  {hourlyRows}
                 </div>
               </Grid>
             </Grid>
