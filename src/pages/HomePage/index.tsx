@@ -20,21 +20,16 @@ import { BaseLayout } from '../../layouts/BaseLayout';
 import GeocodingService from '../../services/geocoding/search.service';
 import Dates from '../../services/utils/dates';
 import './styles.scss';
-
-type Location = {
-  [key: string]: any;
-}
-type Weather = {
-  [key: string]: any;
-}
+import { Location } from '../../types/location';
+import { Weather } from '../../types/weather';
 
 export function HomePage() {
   const [location, setLocation] = useState({} as Location);
   const [weather, setWeather] = useState({} as Weather);
   const [sunrise, setSunrise] = useState(new Date());
   const [sunset, setSunset] = useState(new Date());
-  const [dailyRows, setDailyRows] = useState([]);
-  const [hourlyRows, setHourlyRows] = useState([]);
+  const [dailyRows, setDailyRows] = useState<JSX.Element[]>([]);
+  const [hourlyRows, setHourlyRows] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     populateData();
@@ -89,14 +84,13 @@ export function HomePage() {
         const tempMax = Math.round(day.temp.max);
         const tempMin = Math.round(day.temp.min);
         const image = `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
-        setDailyRows(oldArray => [...oldArray,
-        <DailyForecast
+        const newDailyForecastElement = <DailyForecast
           image={image}
           alt={day.weather.description}
           title={formattedDate}
           subtitle={`${tempMax}º - ${tempMin}º`}
-        />
-        ]);
+        />;
+        setDailyRows(oldArray => [...oldArray, newDailyForecastElement]);
       }
 
       for (let i = 0; i < weatherResponse.data.item.hourly.length; i++) {
@@ -105,14 +99,13 @@ export function HomePage() {
         const formattedDate = Dates.formatDate(hourDate, 'h a');
         const temp = Math.round(hour.temp);
         const image = `http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`;
-        setHourlyRows(oldArray => [...oldArray,
-        <HourlyForecast
+        const newHourlyForecastElement = <HourlyForecast
           image={image}
           alt={hour.weather.description}
           title={formattedDate}
           subtitle={`${temp}º`}
-        />
-        ]);
+        />;
+        setHourlyRows(oldArray => [...oldArray, newHourlyForecastElement]);
       }
     }, () => {
       console.log('Unable to retrieve your location');
@@ -131,7 +124,7 @@ export function HomePage() {
     return (
       <>
         <BaseLayout>
-        <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ flexGrow: 1, marginBottom: 2 }}>
             <Grid container spacing={6}>
               <Grid item xs={5}>
                 <Card className="image-container" style={styles.mainCard} sx={{ minHeight: 200 }}>
@@ -163,12 +156,12 @@ export function HomePage() {
                 </div>
 
                 <div className="cards-container">
-                  <Info 
+                  <Info
                     image={Wind}
                     alt="sol"
                     title="Wind"
                     subtitle={weather.current.wind_speed + ' m/s'}
-                    />
+                  />
                   <Info
                     image={FeelsLike}
                     alt="sol"
